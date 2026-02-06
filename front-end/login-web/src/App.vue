@@ -1,52 +1,41 @@
 <template>
   <div>
-    <h1>Cadastro</h1>
+    <Cadastro v-if="tela === 'cadastro'" />
 
-    <input type="text" placeholder="Nome" v-model="nome" />
-    <br /><br />
+    <Login
+      v-if="tela === 'login'"
+      @login-sucesso="irParaHome"
+    />
 
-    <input type="email" placeholder="Email" v-model="email" />
-    <br /><br />
+    <Home v-if="tela === 'home'" />
 
-    <input type="password" placeholder="Senha" v-model="senha" />
-    <br /><br />
+    <hr />
 
-    <button @click="cadastrar">Cadastrar</button>
-
-    <p>{{ mensagem }}</p>
+    <button @click="tela = 'login'">Login</button>
+    <button @click="tela = 'cadastro'">Cadastro</button>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import Cadastro from './components/Cadastro.vue'
+import Login from './components/Login.vue'
+import Home from './components/Home.vue'
+
 export default {
   name: 'App',
-
+  components: {
+    Cadastro,
+    Login,
+    Home
+  },
   data() {
     return {
-      nome: '',
-      email: '',
-      senha: '',
-      mensagem: ''
+      tela: 'login'
     }
   },
-
   methods: {
-    async cadastrar() {
-      try {
-        const response = await axios.post(
-          'http://localhost:8080/api/users/cadastro',
-          {
-            nome: this.nome,
-            email: this.email,
-            senha: this.senha
-          }
-        )
-        this.mensagem = response.data
-      } catch (error) {
-        this.mensagem = 'Erro ao cadastrar'
-        console.error(error)
-      }
+    irParaHome() {
+      this.tela = 'home'
     }
   }
 }
